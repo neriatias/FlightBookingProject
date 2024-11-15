@@ -14,5 +14,5 @@ COPY . .
 # פתיחת פורט 5001
 EXPOSE 5001
 
-# הפקודה להרצת השרת
-CMD ["npm", "run", "dev"]
+# הפקודה להרצת ה-Backend
+CMD ["node", "server.js"]

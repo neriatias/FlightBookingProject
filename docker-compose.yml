@@ -8,6 +8,12 @@ services:
       - "5001:5001"
     depends_on:
       - database
+    environment:
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_USER: admin
+      DATABASE_PASSWORD: secret
+      DATABASE_NAME: flightdb
 
   frontend:
     build:
@@ -25,4 +31,4 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: flightdb
     ports:
-      - "5432:5432"  # שנה את הפורט ל-5433 או כל פורט פנוי אחר
+      - "5433:5432"  # שנה את הפורט ל-5433 חיצוני ו-5432 פנימי

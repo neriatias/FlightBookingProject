@@ -1,39 +1,51 @@
 const sequelize = require('./config/database');
-
-sequelize.authenticate()
-  .then(() => {
-    console.log('Connection to the database has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
-
 const express = require('express');
-const cors = require('cors'); // הוספת CORS
+const cors = require('cors');
 const app = express();
 
-app.use(cors()); // שימוש ב-CORS
+app.use(cors());
 app.use(express.json());
 
-const PORT = 5001;
+const PORT = 5002;
+
+// ייבוא המודלים
+const Flight = require('./models/Flight');
+const Booking = require('./models/Booking');
+
+// פונקציה להוספת טיסות קבועות
+async function initializeFlights() {
+  const count = await Flight.count();
+  if (count === 0) {
+    await Flight.bulkCreate([
+      { from: 'New York', to: 'Los Angeles', price: 350 },
+      { from: 'Paris', to: 'London', price: 150 },
+      { from: 'Tokyo', to: 'Seoul', price: 300 },
+      { from: 'Sydney', to: 'Melbourne', price: 120 },
+      { from: 'Rome', to: 'Berlin', price: 200 },
+      { from: 'Toronto', to: 'Vancouver', price: 400 },
+      { from: 'Dubai', to: 'Mumbai', price: 250 },
+      { from: 'Cairo', to: 'Istanbul', price: 180 },
+      { from: 'Mexico City', to: 'Cancun', price: 220 },
+      { from: 'Miami', to: 'Chicago', price: 180 }
+      // ניתן להוסיף טיסות נוספות לפי הצורך
+    ]);
+    console.log('Default flights added');
+  }
+}
+
+// סנכרון מסד הנתונים והוספת טיסות ברירת מחדל
+sequelize.sync({ force: false }).then(() => {
+  console.log('Database & tables created!');
+  initializeFlights(); // הוספת טיסות לברירת מחדל
+});
 
 // נתיב ברירת מחדל
 app.get('/', (req, res) => {
   res.send('Welcome to the Flight Booking API');
 });
 
-// ייבוא המודלים
-const Flight = require('./models/Flight');
-const Booking = require('./models/Booking');
-
-// סנכרון מסד הנתונים
-sequelize.sync({ force: true }).then(() => {
-  console.log('Database & tables created!');
-});
-
 // נתיבי Flights
 
-// קבלת כל הטיסות
 // חיפוש טיסות לפי עיר מוצא ועיר יעד
 app.get('/flights/search', async (req, res) => {
   const { from, to } = req.query;
@@ -51,19 +63,6 @@ app.get('/flights/search', async (req, res) => {
   }
 });
 
-
-// יצירת טיסה חדשה
-app.post('/flights', async (req, res) => {
-  console.log('Request Body:', req.body); // הדפסת גוף הבקשה
-  try {
-    const flight = await Flight.create(req.body);
-    res.status(201).json(flight);
-  } catch (error) {
-    console.error('Error creating flight:', error);
-    res.status(500).json({ error: 'Failed to create flight', details: error.message });
-  }
-});
-
 // קבלת טיסה לפי מזהה
 app.get('/flights/:id', async (req, res) => {
   try {
@@ -75,36 +74,6 @@ app.get('/flights/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve flight' });
-  }
-});
-
-// עדכון טיסה לפי מזהה
-app.put('/flights/:id', async (req, res) => {
-  try {
-    const flight = await Flight.findByPk(req.params.id);
-    if (flight) {
-      await flight.update(req.body);
-      res.json(flight);
-    } else {
-      res.status(404).json({ error: 'Flight not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update flight' });
-  }
-});
-
-// מחיקת טיסה לפי מזהה
-app.delete('/flights/:id', async (req, res) => {
-  try {
-    const flight = await Flight.findByPk(req.params.id);
-    if (flight) {
-      await flight.destroy();
-      res.json({ message: 'Flight deleted' });
-    } else {
-      res.status(404).json({ error: 'Flight not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete flight' });
   }
 });
 
@@ -130,6 +99,7 @@ app.post('/bookings', async (req, res) => {
   }
 });
 
+
 // קבלת הזמנה לפי מזהה
 app.get('/bookings/:id', async (req, res) => {
   try {
@@ -141,36 +111,6 @@ app.get('/bookings/:id', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve booking' });
-  }
-});
-
-// עדכון הזמנה לפי מזהה
-app.put('/bookings/:id', async (req, res) => {
-  try {
-    const booking = await Booking.findByPk(req.params.id);
-    if (booking) {
-      await booking.update(req.body);
-      res.json(booking);
-    } else {
-      res.status(404).json({ error: 'Booking not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update booking' });
-  }
-});
-
-// מחיקת הזמנה לפי מזהה
-app.delete('/bookings/:id', async (req, res) => {
-  try {
-    const booking = await Booking.findByPk(req.params.id);
-    if (booking) {
-      await booking.destroy();
-      res.json({ message: 'Booking deleted' });
-    } else {
-      res.status(404).json({ error: 'Booking not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete booking' });
   }
 });
 
