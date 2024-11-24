@@ -51,7 +51,7 @@ git clone https://github.com/<your-username>/FlightBookingProject.git
 cd FlightBookingProject
 ```
 ### **3. Run Locally**
-**Frontend**
+## **Frontend**
 Navigate to the frontend folder:
 ```bash
 cd frontend
@@ -64,7 +64,7 @@ npm install
 ```bash
 npm start
 ```
-**Backend**
+## **Backend**
 Navigate to the backend folder:
 ```bash
 cd backend
@@ -73,46 +73,44 @@ cd backend
 ```bash
 npm install
 ```
-Set up environment variables: Create a .env file with the following content:
-makefile
-Copy code
+**Set up environment variables: Create a .env file with the following content:**
+```bash
 DATABASE_HOST=localhost
 DATABASE_USER=admin
 DATABASE_PASSWORD=secret
 DATABASE_NAME=flightdb
 DATABASE_PORT=5432
-Start the server:
+```
+**Start the server:**
 ```bash
 npm start
 ```
-**Database**
-Ensure PostgreSQL is running on your system.
-Create a database named flightdb.
-4. Run with Docker
+## **Database**
+1.Ensure PostgreSQL is running on your system.
+2.Create a database named flightdb.
+**4. Run with Docker**
 Build and run all services:
 ```bash
 docker-compose up --build
 ```
-Access the services:
+**Access the services:**
 Frontend: http://localhost:3000
 Backend: http://localhost:5001
-Testing
-Run backend tests:
-bash
-Copy code
+## **Testing**
+**Run backend tests:**
+```bash
 cd backend
 npm test
-Run frontend build tests:
-bash
-Copy code
+```
+**Run frontend build tests:**
+```bash
 cd frontend
 npm run build
-CI/CD
+```
+## **CI/CD**
 The CI/CD pipeline is configured in .github/workflows/ci-cd.yml:
 
-Build and Test:
+**Build and Test:**
 Installs dependencies for frontend and backend.
 Runs backend tests using Jest.
 Builds the frontend using React.
-Deployment:
-Uses Docker Compose to deploy services.
