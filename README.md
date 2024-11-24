@@ -49,11 +49,13 @@ This project is a **Flight Booking System** that allows users to search for flig
 ```bash
 git clone https://github.com/<your-username>/FlightBookingProject.git
 cd FlightBookingProject
-```bash
+```
 ### **3. Run Locally**
 **Frontend**
 Navigate to the frontend folder:
+```bash
 cd frontend
+```
 **Install dependencies:**
 npm install
 Start the development server:
