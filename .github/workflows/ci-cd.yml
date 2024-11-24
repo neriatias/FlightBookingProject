@@ -51,7 +51,7 @@ jobs:
 
     - name: Set Backend Environment Variables
       run: |
-        echo DATABASE_HOST=localhost >> $GITHUB_ENV
+        echo DATABASE_HOST=db >> $GITHUB_ENV
         echo DATABASE_USER=admin >> $GITHUB_ENV
         echo DATABASE_PASSWORD=secret >> $GITHUB_ENV
         echo DATABASE_NAME=flightdb >> $GITHUB_ENV
