@@ -1,4 +1,4 @@
-jest.setTimeout(30000); // הגדל את ה-timeout ל-30 שניות
+jest.setTimeout(60000); // הגדל את ה-timeout ל-30 שניות
 
 const request = require('supertest');
 const app = require('../server');
@@ -8,25 +8,28 @@ let server;
 let PORT;
 
 describe('Flight Booking API Tests', () => {
-  beforeAll(async () => {
-    server = app.listen(0); // הפעלת השרת על פורט דינמי
-    PORT = server.address().port;
-
-    // חיבור למסד הנתונים עם לולאת בדיקה
-    let connected = false;
-    for (let i = 0; i < 10; i++) {
-      try {
-        await sequelize.authenticate(); // בדוק אם החיבור פעיל
-        await sequelize.sync({ force: false }); // סנכרון מסד הנתונים
-        connected = true;
-        break;
-      } catch (error) {
-        console.log(`Database connection failed, retrying (${i + 1}/10)...`);
-        await new Promise((resolve) => setTimeout(resolve, 5000)); // המתן 5 שניות
-      }
-    }
-    if (!connected) throw new Error('Failed to connect to the database');
-  });
+    beforeAll(async () => {
+        server = app.listen(0); // הפעלת השרת על פורט דינמי
+        PORT = server.address().port;
+      
+        let connected = false;
+        for (let i = 0; i < 10; i++) {
+          try {
+            await sequelize.authenticate();
+            await sequelize.sync({ force: false });
+            connected = true;
+            console.log('Database connected successfully!');
+            break;
+          } catch (error) {
+            console.log(`Database connection failed, retrying (${i + 1}/10)...`);
+            await new Promise((resolve) => setTimeout(resolve, 5000)); // המתן 5 שניות
+          }
+        }
+        if (!connected) {
+          throw new Error('Failed to connect to the database after 10 attempts');
+        }
+      });
+      
 
   afterAll(async () => {
     if (server) server.close(); // סגור את השרת
