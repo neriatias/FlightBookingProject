@@ -31,7 +31,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Backend - התקנת תלויות והרצת בדיקות
+    # Backend - Install dependencies and run tests
     - name: Install Backend Dependencies
       working-directory: ./backend
       run: npm install
@@ -42,8 +42,8 @@ jobs:
 
     - name: Wait for PostgreSQL to be ready
       run: |
-        for i in {1..10}; do
-          nc -z localhost 5432 && echo "PostgreSQL is ready" && exit 0
+        for i in {1..20}; do
+          pg_isready -h db -p 5432 -U admin && echo "PostgreSQL is ready" && exit 0
           echo "Waiting for PostgreSQL..."
           sleep 5
         done
@@ -67,7 +67,7 @@ jobs:
         DATABASE_PORT: ${{ env.DATABASE_PORT }}
       run: npx jest --runInBand
 
-    # Frontend - התקנת תלויות ובנייה
+    # Frontend - Install dependencies and build
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
