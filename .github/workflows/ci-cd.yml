@@ -21,16 +21,11 @@ jobs:
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: secret
           POSTGRES_DB: flightdb
-        options: >-
-          --health-cmd="pg_isready -U admin -d flightdb"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+      
     - name: Install Docker Compose
       run: |
         sudo apt-get update
