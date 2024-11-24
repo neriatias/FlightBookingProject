@@ -57,20 +57,22 @@ Navigate to the frontend folder:
 cd frontend
 ```
 **Install dependencies:**
+```bash
 npm install
-Start the development server:
-bash
-Copy code
+```
+**Start the development server:**
+```bash
 npm start
-Backend
+```
+**Backend**
 Navigate to the backend folder:
-bash
-Copy code
+```bash
 cd backend
-Install dependencies:
-bash
-Copy code
+```
+**Install dependencies:**
+```bash
 npm install
+```
 Set up environment variables: Create a .env file with the following content:
 makefile
 Copy code
@@ -80,17 +82,17 @@ DATABASE_PASSWORD=secret
 DATABASE_NAME=flightdb
 DATABASE_PORT=5432
 Start the server:
-bash
-Copy code
+```bash
 npm start
-Database
+```
+**Database**
 Ensure PostgreSQL is running on your system.
 Create a database named flightdb.
 4. Run with Docker
 Build and run all services:
-bash
-Copy code
+```bash
 docker-compose up --build
+```
 Access the services:
 Frontend: http://localhost:3000
 Backend: http://localhost:5001
