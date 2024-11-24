@@ -94,8 +94,8 @@ npm start
 docker-compose up --build
 ```
 **Access the services:**
--Frontend: http://localhost:3000
--Backend: http://localhost:5001
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5001
 ### **Testing**
 **Run backend tests:**
 ```bash
@@ -111,6 +111,6 @@ npm run build
 The CI/CD pipeline is configured in .github/workflows/ci-cd.yml:
 
 **Build and Test:**
--Installs dependencies for frontend and backend.
--Runs backend tests using Jest.
--Builds the frontend using React.
+- Installs dependencies for frontend and backend.
+- Runs backend tests using Jest.
+- Builds the frontend using React.
