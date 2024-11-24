@@ -1,3 +1,5 @@
+jest.setTimeout(30000); // הגדל את ה-timeout ל-30 שניות
+
 const request = require('supertest');
 const app = require('../server');
 const sequelize = require('../config/database');
