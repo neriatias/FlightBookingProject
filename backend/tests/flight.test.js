@@ -1,23 +1,34 @@
 const request = require('supertest');
-const app = require('../server'); // נתיב לשרת
-const Flight = require('../models/Flight'); // מודל ה-Flight
-const sequelize = require('../config/database'); // חיבור למסד הנתונים
+const app = require('../server');
+const sequelize = require('../config/database');
 
-let server; // משתנה לשמירת השרת
-let PORT; // משתנה לפורט דינמי
+let server;
+let PORT;
 
 describe('Flight Booking API Tests', () => {
   beforeAll(async () => {
     server = app.listen(0); // הפעלת השרת על פורט דינמי
-    PORT = server.address().port; // שמירת הפורט בפועל
-    await sequelize.sync({ force: false }); // סנכרון מסד הנתונים
+    PORT = server.address().port;
+
+    // חיבור למסד הנתונים עם לולאת בדיקה
+    let connected = false;
+    for (let i = 0; i < 10; i++) {
+      try {
+        await sequelize.authenticate(); // בדוק אם החיבור פעיל
+        await sequelize.sync({ force: false }); // סנכרון מסד הנתונים
+        connected = true;
+        break;
+      } catch (error) {
+        console.log(`Database connection failed, retrying (${i + 1}/10)...`);
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // המתן 5 שניות
+      }
+    }
+    if (!connected) throw new Error('Failed to connect to the database');
   });
 
   afterAll(async () => {
-    if (server) {
-      server.close(); // סגירת השרת
-    }
-    await sequelize.close(); // סגירת החיבור למסד הנתונים
+    if (server) server.close(); // סגור את השרת
+    await sequelize.close(); // סגור את החיבור למסד הנתונים
   });
 
   test('Server loads successfully', () => {
@@ -41,7 +52,7 @@ describe('Flight Booking API Tests', () => {
 
   describe('Database initialization', () => {
     it('should contain default flights', async () => {
-      const flights = await Flight.findAll();
+      const flights = await sequelize.models.Flight.findAll();
       expect(flights.length).toBeGreaterThan(0);
     });
   });

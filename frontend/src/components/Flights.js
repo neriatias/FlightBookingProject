@@ -17,7 +17,8 @@ const Flights = () => {
   const fetchFlights = async () => {
     try {
       const response = await api.get('/flights/search');
-      setFlights(response.data);
+      console.log(response); // הדפסת המידע לצורכי Debugging
+      setFlights(response.data); // עדכון מצב הטיסות
     } catch (error) {
       console.error('Failed to fetch flights:', error);
     }
@@ -45,6 +46,7 @@ const Flights = () => {
         passengerName,
         seatNumber
       });
+      console.log(response); // הדפסת התגובה לצורכי Debugging
       setMessage(`Booking confirmed for ${passengerName} on flight from ${selectedFlight.from} to ${selectedFlight.to}`);
       setSelectedFlight(null); // סגירת הטופס לאחר שליחה
     } catch (error) {
