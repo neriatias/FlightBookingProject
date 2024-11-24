@@ -49,15 +49,12 @@ This project is a **Flight Booking System** that allows users to search for flig
 ```bash
 git clone https://github.com/<your-username>/FlightBookingProject.git
 cd FlightBookingProject
-3. Run Locally
-Frontend
+
+### **3. Run Locally**
+**Frontend**
 Navigate to the frontend folder:
-bash
-Copy code
 cd frontend
-Install dependencies:
-bash
-Copy code
+**Install dependencies:**
 npm install
 Start the development server:
 bash
@@ -115,22 +112,3 @@ Runs backend tests using Jest.
 Builds the frontend using React.
 Deployment:
 Uses Docker Compose to deploy services.
-Project Structure
-csharp
-Copy code
-FlightBookingProject/
-│
-├── backend/              # Backend code
-│   ├── models/           # Sequelize models
-│   ├── routes/           # API routes
-│   ├── config/           # Database configuration
-│   └── tests/            # Backend tests (Jest)
-│
-├── frontend/             # Frontend code
-│   ├── public/           # Public assets
-│   ├── src/              # React components
-│   └── tests/            # Frontend tests
-│
-├── docker-compose.yml    # Docker Compose configuration
-├── .github/              # CI/CD workflows
-└── README.md             # Project documentation
