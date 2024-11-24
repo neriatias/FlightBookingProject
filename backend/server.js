@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 // חיפוש טיסות לפי עיר מוצא ועיר יעד
 app.get('/flights/search', async (req, res) => {
   const { from, to } = req.query;
-  
+
   try {
     const flights = await Flight.findAll({
       where: {
@@ -99,7 +99,6 @@ app.post('/bookings', async (req, res) => {
   }
 });
 
-
 // קבלת הזמנה לפי מזהה
 app.get('/bookings/:id', async (req, res) => {
   try {
@@ -114,7 +113,11 @@ app.get('/bookings/:id', async (req, res) => {
   }
 });
 
-// האזנה לשרת
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// האזנה לשרת - רק אם הקובץ מופעל ישירות (לא בבדיקות)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

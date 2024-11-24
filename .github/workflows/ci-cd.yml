@@ -12,6 +12,21 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      db:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: secret
+          POSTGRES_DB: flightdb
+        options: >-
+          --health-cmd="pg_isready -U admin -d flightdb"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -21,8 +36,22 @@ jobs:
       working-directory: ./backend
       run: npm install
 
+    - name: Set Backend Environment Variables
+      run: |
+        echo DATABASE_HOST=localhost >> $GITHUB_ENV
+        echo DATABASE_USER=admin >> $GITHUB_ENV
+        echo DATABASE_PASSWORD=secret >> $GITHUB_ENV
+        echo DATABASE_NAME=flightdb >> $GITHUB_ENV
+        echo DATABASE_PORT=5432 >> $GITHUB_ENV
+
     - name: Run Backend Tests
       working-directory: ./backend
+      env:
+        DATABASE_HOST: ${{ env.DATABASE_HOST }}
+        DATABASE_USER: ${{ env.DATABASE_USER }}
+        DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+        DATABASE_NAME: ${{ env.DATABASE_NAME }}
+        DATABASE_PORT: ${{ env.DATABASE_PORT }}
       run: npm test
 
     # Frontend - התקנת תלויות ובנייה
