@@ -89,13 +89,13 @@ npm start
 1.Ensure PostgreSQL is running on your system.
 2.Create a database named flightdb.
 **4. Run with Docker**
-Build and run all services:
+-Build and run all services:
 ```bash
 docker-compose up --build
 ```
 **Access the services:**
-Frontend: http://localhost:3000
-Backend: http://localhost:5001
+-Frontend: http://localhost:3000
+-Backend: http://localhost:5001
 ### **Testing**
 **Run backend tests:**
 ```bash
@@ -111,6 +111,6 @@ npm run build
 The CI/CD pipeline is configured in .github/workflows/ci-cd.yml:
 
 **Build and Test:**
-Installs dependencies for frontend and backend.
-Runs backend tests using Jest.
-Builds the frontend using React.
+-Installs dependencies for frontend and backend.
+-Runs backend tests using Jest.
+-Builds the frontend using React.
