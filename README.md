@@ -40,18 +40,18 @@ This project is a **Flight Booking System** that allows users to search for flig
 
 ## **Setup Instructions**
 
-### **1. Prerequisites**
+## **1. Prerequisites**
 - Install [Node.js](https://nodejs.org/).
 - Install [Docker](https://www.docker.com/).
 - Install [npm](https://www.npmjs.com/) (comes with Node.js).
 
-### **2. Clone the Repository**
+## **2. Clone the Repository**
 ```bash
 git clone https://github.com/<your-username>/FlightBookingProject.git
 cd FlightBookingProject
 ```
-### **3. Run Locally**
-## **Frontend**
+## **3. Run Locally**
+### **Frontend**
 Navigate to the frontend folder:
 ```bash
 cd frontend
@@ -64,7 +64,7 @@ npm install
 ```bash
 npm start
 ```
-## **Backend**
+### **Backend**
 Navigate to the backend folder:
 ```bash
 cd backend
@@ -85,7 +85,7 @@ DATABASE_PORT=5432
 ```bash
 npm start
 ```
-## **Database**
+### **Database**
 1.Ensure PostgreSQL is running on your system.
 2.Create a database named flightdb.
 **4. Run with Docker**
@@ -96,7 +96,7 @@ docker-compose up --build
 **Access the services:**
 Frontend: http://localhost:3000
 Backend: http://localhost:5001
-## **Testing**
+### **Testing**
 **Run backend tests:**
 ```bash
 cd backend
@@ -107,7 +107,7 @@ npm test
 cd frontend
 npm run build
 ```
-## **CI/CD**
+### **CI/CD**
 The CI/CD pipeline is configured in .github/workflows/ci-cd.yml:
 
 **Build and Test:**
