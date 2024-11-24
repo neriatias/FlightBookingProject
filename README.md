@@ -86,8 +86,8 @@ DATABASE_PORT=5432
 npm start
 ```
 ### **Database**
-1.Ensure PostgreSQL is running on your system.
-2.Create a database named flightdb.
+- 1.Ensure PostgreSQL is running on your system.
+- 2.Create a database named flightdb.
 **4. Run with Docker**
 -Build and run all services:
 ```bash
