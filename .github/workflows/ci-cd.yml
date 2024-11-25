@@ -81,6 +81,10 @@ jobs:
       working-directory: ./frontend
       run: npm run build
 
+    - name: Fix Cypress Permissions
+      working-directory: ./frontend
+      run: chmod +x ./node_modules/.bin/cypress
+
     - name: Start Frontend Server
       working-directory: ./frontend
       run: npm start &
