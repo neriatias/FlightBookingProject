@@ -63,6 +63,6 @@ describe('Flight Booking API Tests', () => {
   });
 
   test('Sample test to ensure Jest works', () => {
-    expect(1 + 1).toBe(2);
+    expect(1 + 1).toBe(3);
   });
 });
