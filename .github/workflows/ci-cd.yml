@@ -26,6 +26,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
     - name: Install Docker Compose
       run: |
         sudo apt-get update
@@ -67,7 +72,7 @@ jobs:
         DATABASE_PORT: ${{ env.DATABASE_PORT }}
       run: npx jest --runInBand
 
-    # Frontend - Install dependencies and build
+    # Frontend - Install dependencies, build, and test
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
@@ -75,6 +80,19 @@ jobs:
     - name: Build Frontend
       working-directory: ./frontend
       run: npm run build
+
+    - name: Start Frontend Server
+      working-directory: ./frontend
+      run: npm start &
+      
+    - name: Wait for Frontend to be ready
+      run: npx wait-on http://localhost:3000
+
+    - name: Run Cypress Tests
+      working-directory: ./frontend
+      env:
+        CYPRESS_BASE_URL: http://localhost:3000
+      run: npx cypress run
 
   docker-deploy:
     runs-on: ubuntu-latest
