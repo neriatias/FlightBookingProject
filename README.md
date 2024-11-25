@@ -1,6 +1,6 @@
 # Flight Booking System
 
-This project is a **Flight Booking System** that allows users to search for flights, view available options, and make bookings. It includes a **frontend** built with React, a **backend** built with Node.js and Express, and a **PostgreSQL database** managed with Sequelize. The project is fully containerized using **Docker** and includes a CI/CD pipeline for testing and deployment.
+This project is a **Flight Booking System** that allows users to search for flights, view available options, and make bookings.addaIt includes a **frontend** built with React, a **backend** built with Node.js and Express, and a **PostgreSQL database** managed with Sequelize. The project is fully containerized using **Docker** and includes a CI/CD pipeline for testing and deployment.
 
 ---
 
