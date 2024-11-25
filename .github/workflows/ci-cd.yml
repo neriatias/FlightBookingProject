@@ -77,6 +77,10 @@ jobs:
       working-directory: ./frontend
       run: npm install
 
+    - name: Install Cypress
+      working-directory: ./frontend
+      run: npm install cypress --save-dev
+
     - name: Build Frontend
       working-directory: ./frontend
       run: npm run build
