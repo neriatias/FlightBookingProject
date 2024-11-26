@@ -41,12 +41,7 @@ jobs:
       run: |
         docker-compose down
         docker-compose up --build -d
-
-    - name: Wait for Services to be Ready
-      run: |
-        npx wait-on http://localhost:3000
-        npx wait-on http://localhost:5002
-
+        
     # Backend Tests
     - name: Run Backend Tests
       working-directory: ./backend
