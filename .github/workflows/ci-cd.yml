@@ -96,12 +96,6 @@ jobs:
     - name: Wait for Frontend to be ready
       run: npx wait-on http://localhost:3000
 
-    - name: Run Cypress Tests
-      working-directory: ./frontend
-      env:
-        CYPRESS_BASE_URL: http://localhost:3000
-      run: npx cypress run
-
   docker-deploy:
     runs-on: ubuntu-latest
     needs: build-and-test
@@ -119,6 +113,12 @@ jobs:
       run: |
         docker-compose down
         docker-compose up --build -d
+
+    - name: Run Cypress Tests
+      working-directory: ./frontend
+      env:
+        CYPRESS_BASE_URL: http://localhost:3000
+      run: npx cypress run
 
     - name: Verify Services are Running
       run: docker ps
