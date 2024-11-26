@@ -78,27 +78,24 @@ jobs:
       run: npm install
 
     - name: Install Cypress
-      run: npm install cypress --save-dev
-
-    - name: Install Cypress Binary
-      run: npx cypress install
+      working-directory: ./frontend
+      run: |
+        npm install cypress --save-dev
+        chmod +x ./node_modules/.bin/cypress
 
     - name: Build Frontend
       working-directory: ./frontend
       run: npm run build
 
-    - name: Fix Cypress Permissions
-      run: chmod +x ./node_modules/.bin/cypress
-
     - name: Start Frontend Server
       working-directory: ./frontend
       run: npm start &
-      
+
     - name: Wait for Frontend to be ready
       run: npx wait-on http://localhost:3000
 
     - name: Run Cypress Tests
-      working-directory: .
+      working-directory: ./frontend
       env:
         CYPRESS_BASE_URL: http://localhost:3000
       run: npx cypress run
@@ -123,5 +120,3 @@ jobs:
 
     - name: Verify Services are Running
       run: docker ps
-
-
