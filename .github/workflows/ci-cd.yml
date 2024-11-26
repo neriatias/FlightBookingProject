@@ -95,7 +95,7 @@ jobs:
       run: npx wait-on http://localhost:3000
 
     - name: Run Cypress Tests
-      working-directory: ./frontend
+      working-directory: .
       env:
         CYPRESS_BASE_URL: http://localhost:3000
       run: npx cypress run
