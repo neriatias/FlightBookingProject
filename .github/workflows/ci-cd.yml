@@ -36,65 +36,40 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    # Backend - Install dependencies and run tests
-    - name: Install Backend Dependencies
-      working-directory: ./backend
-      run: npm install
-
-    - name: Fix Jest Permissions
-      working-directory: ./backend
-      run: chmod +x ./node_modules/.bin/jest
-
-    - name: Wait for PostgreSQL to be ready
+    # Start all services using Docker Compose
+    - name: Start Docker Compose
       run: |
-        for i in {1..10}; do
-          pg_isready -h localhost -p 5432 -U admin && echo "PostgreSQL is ready" && exit 0
-          echo "Waiting for PostgreSQL..."
-          sleep 5
-        done
-        echo "PostgreSQL did not become ready in time" && exit 1
+        docker-compose down
+        docker-compose up --build -d
 
-    - name: Set Backend Environment Variables
+    - name: Wait for Services to be Ready
       run: |
-        echo DATABASE_HOST=127.0.0.1 >> $GITHUB_ENV
-        echo DATABASE_USER=admin >> $GITHUB_ENV
-        echo DATABASE_PASSWORD=secret >> $GITHUB_ENV
-        echo DATABASE_NAME=flightdb >> $GITHUB_ENV
-        echo DATABASE_PORT=5432 >> $GITHUB_ENV
+        npx wait-on http://localhost:3000
+        npx wait-on http://localhost:5002
 
+    # Backend Tests
     - name: Run Backend Tests
       working-directory: ./backend
-      env:
-        DATABASE_HOST: ${{ env.DATABASE_HOST }}
-        DATABASE_USER: ${{ env.DATABASE_USER }}
-        DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        DATABASE_NAME: ${{ env.DATABASE_NAME }}
-        DATABASE_PORT: ${{ env.DATABASE_PORT }}
-      run: npx jest --runInBand
+      run: npm install && npm test
 
-    # Frontend - Install dependencies, build, and test
+    # Frontend Tests
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
 
     - name: Install Cypress
       working-directory: ./frontend
-      run: |
-        npm install cypress --save-dev
-        chmod +x ./node_modules/.bin/cypress
+      run: npm install cypress --save-dev
 
-    - name: Build Frontend
+    - name: Install Cypress Binary
       working-directory: ./frontend
-      run: npm run build
+      run: npx cypress install
 
-    - name: Start Frontend Server
+    - name: Run Cypress Tests
       working-directory: ./frontend
-      run: npm start &
       env:
-        NEXT_PUBLIC_BACKEND_URL: http://localhost:5002
-
-    - name: Wait for Frontend to be ready
-      run: npx wait-on http://localhost:3000
+        CYPRESS_BASE_URL: http://localhost:3000
+      run: npx cypress run
 
   docker-deploy:
     runs-on: ubuntu-latest
@@ -109,16 +84,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    - name: Set up Docker Compose
+    - name: Deploy Using Docker Compose
       run: |
         docker-compose down
         docker-compose up --build -d
-
-    - name: Run Cypress Tests
-      working-directory: ./frontend
-      env:
-        CYPRESS_BASE_URL: http://localhost:3000
-      run: npx cypress run
 
     - name: Verify Services are Running
       run: docker ps
