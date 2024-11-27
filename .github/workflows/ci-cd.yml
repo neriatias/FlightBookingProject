@@ -80,7 +80,6 @@ jobs:
         DATABASE_PORT: ${{ env.DATABASE_PORT }}
       run: npx jest --runInBand
 
-    # Frontend - Install dependencies, build, and test
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
