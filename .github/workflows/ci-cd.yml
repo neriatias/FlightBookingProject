@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-    docker-deploy:
+  docker-deploy:
     runs-on: ubuntu-latest
     needs: build-and-test
 
