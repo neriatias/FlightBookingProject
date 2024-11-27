@@ -62,6 +62,19 @@ jobs:
         echo DATABASE_NAME=flightdb >> $GITHUB_ENV
         echo DATABASE_PORT=5432 >> $GITHUB_ENV
 
+    - name: Start Backend Server
+      working-directory: ./backend
+      run: npm start &
+      env:
+        DATABASE_HOST: 127.0.0.1
+        DATABASE_USER: admin
+        DATABASE_PASSWORD: secret
+        DATABASE_NAME: flightdb
+        DATABASE_PORT: 5432
+
+    - name: Wait for Backend to be ready
+      run: npx wait-on http://localhost:5002
+
     - name: Run Backend Tests
       working-directory: ./backend
       env:
