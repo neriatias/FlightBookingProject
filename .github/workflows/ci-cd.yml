@@ -31,11 +31,6 @@ jobs:
       with:
         node-version: 16
 
-    - name: Install Docker Compose
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose
-
     # Backend - Install dependencies and run tests
     - name: Install Backend Dependencies
       working-directory: ./backend
@@ -62,6 +57,19 @@ jobs:
         echo DATABASE_NAME=flightdb >> $GITHUB_ENV
         echo DATABASE_PORT=5432 >> $GITHUB_ENV
 
+    - name: Start Backend Server
+      working-directory: ./backend
+      run: npm start &
+      env:
+        DATABASE_HOST: 127.0.0.1
+        DATABASE_USER: admin
+        DATABASE_PASSWORD: secret
+        DATABASE_NAME: flightdb
+        DATABASE_PORT: 5432
+
+    - name: Wait for Backend to be ready
+      run: npx wait-on http://localhost:5002
+
     - name: Run Backend Tests
       working-directory: ./backend
       env:
@@ -72,7 +80,6 @@ jobs:
         DATABASE_PORT: ${{ env.DATABASE_PORT }}
       run: npx jest --runInBand
 
-    # Frontend - Install dependencies, build, and test
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
