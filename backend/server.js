@@ -46,6 +46,16 @@ app.get('/', (req, res) => {
 
 // נתיבי Flights
 
+// קבלת כל הטיסות
+app.get('/flights', async (req, res) => {
+  try {
+    const flights = await Flight.findAll();
+    res.json(flights);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve flights' });
+  }
+});
+
 // חיפוש טיסות לפי עיר מוצא ועיר יעד
 app.get('/flights/search', async (req, res) => {
   const { from, to } = req.query;
