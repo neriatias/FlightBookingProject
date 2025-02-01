@@ -34,7 +34,7 @@ This project is a **Flight Booking System** that allows users to search for flig
 - **Database**: PostgreSQL
 - **Containerization**: Docker, Docker Compose
 - **CI/CD**: GitHub Actions
-- **Testing**: Jest
+- **Testing**: Jest,Cypress
 
 ---
 
