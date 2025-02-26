@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import './Flights.css';
 //test
-
+//test2
 const Flights = () => {
   const [flights, setFlights] = useState([]);
   const [searchQuery, setSearchQuery] = useState(''); // שדה חיפוש
