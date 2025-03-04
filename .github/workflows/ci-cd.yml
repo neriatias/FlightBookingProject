@@ -35,12 +35,23 @@ jobs:
 
     - name: Wait for Backend to be ready
       run: npx wait-on https://flight-backend-efms.onrender.com
+      
+    - name: Fix Jest Permissions
+      working-directory: ./backend
+      run: chmod +x ./node_modules/.bin/jest
 
     - name: Run Backend Tests
       working-directory: ./backend
       env:
         DATABASE_URL: ${{ env.DATABASE_URL }}
-      run: npx jest --runInBand
+        DATABASE_HOST: ${{ env.DATABASE_HOST }}
+        DATABASE_USER: ${{ env.DATABASE_USER }}
+        DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
+        DATABASE_NAME: ${{ env.DATABASE_NAME }}
+        DATABASE_PORT: ${{ env.DATABASE_PORT }}
+      run: |
+        chmod +x ./node_modules/.bin/jest
+        npx jest --runInBand
 
     # Frontend - Install dependencies, build, and test
     - name: Install Frontend Dependencies
