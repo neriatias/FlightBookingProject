@@ -12,16 +12,6 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: postgres:latest
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: admin
-          POSTGRES_PASSWORD: secret
-          POSTGRES_DB: flightdb
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -31,55 +21,28 @@ jobs:
       with:
         node-version: 16
 
-    # Backend - Install dependencies and run tests
+
+    - name: Set Environment Variables
+      run: |
+        echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> $GITHUB_ENV
+        echo NEXT_PUBLIC_BACKEND_URL=https://flight-backend-efms.onrender.com >> $GITHUB_ENV
+        echo CYPRESS_BASE_URL=https://flight-frontend-q55m.onrender.com >> $GITHUB_ENV
+
+  
     - name: Install Backend Dependencies
       working-directory: ./backend
       run: npm install
 
-    - name: Fix Jest Permissions
-      working-directory: ./backend
-      run: chmod +x ./node_modules/.bin/jest
-
-    - name: Wait for PostgreSQL to be ready
-      run: |
-        for i in {1..10}; do
-          pg_isready -h localhost -p 5432 -U admin && echo "PostgreSQL is ready" && exit 0
-          echo "Waiting for PostgreSQL..."
-          sleep 5
-        done
-        echo "PostgreSQL did not become ready in time" && exit 1
-
-    - name: Set Backend Environment Variables
-      run: |
-        echo DATABASE_HOST=127.0.0.1 >> $GITHUB_ENV
-        echo DATABASE_USER=admin >> $GITHUB_ENV
-        echo DATABASE_PASSWORD=secret >> $GITHUB_ENV
-        echo DATABASE_NAME=flightdb >> $GITHUB_ENV
-        echo DATABASE_PORT=5432 >> $GITHUB_ENV
-
-    - name: Start Backend Server
-      working-directory: ./backend
-      run: npm start &
-      env:
-        DATABASE_HOST: 127.0.0.1
-        DATABASE_USER: admin
-        DATABASE_PASSWORD: secret
-        DATABASE_NAME: flightdb
-        DATABASE_PORT: 5432
-
     - name: Wait for Backend to be ready
-      run: npx wait-on http://localhost:5002
+      run: npx wait-on https://flight-backend-efms.onrender.com
 
     - name: Run Backend Tests
       working-directory: ./backend
       env:
-        DATABASE_HOST: ${{ env.DATABASE_HOST }}
-        DATABASE_USER: ${{ env.DATABASE_USER }}
-        DATABASE_PASSWORD: ${{ env.DATABASE_PASSWORD }}
-        DATABASE_NAME: ${{ env.DATABASE_NAME }}
-        DATABASE_PORT: ${{ env.DATABASE_PORT }}
+        DATABASE_URL: ${{ env.DATABASE_URL }}
       run: npx jest --runInBand
 
+    # Frontend - Install dependencies, build, and test
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
@@ -94,19 +57,13 @@ jobs:
       working-directory: ./frontend
       run: npm run build
 
-    - name: Start Frontend Server
-      working-directory: ./frontend
-      run: npm start &
-      env:
-        NEXT_PUBLIC_BACKEND_URL: http://localhost:5002
-
     - name: Wait for Frontend to be ready
-      run: npx wait-on http://localhost:3000
+      run: npx wait-on ${{ env.CYPRESS_BASE_URL }}
 
     - name: Run Cypress Tests
       working-directory: ./frontend
       env:
-        CYPRESS_BASE_URL: http://localhost:3000
+        CYPRESS_BASE_URL: ${{ env.CYPRESS_BASE_URL }}
       run: npx cypress run
 
   docker-deploy:
